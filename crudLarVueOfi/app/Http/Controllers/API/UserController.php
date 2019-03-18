@@ -21,7 +21,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::orderBy('id','DESC')->paginate(100);
+        //$this->authorize('isAdmin');
+        
+        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
+        {
+            return User::orderBy('id','DESC')->paginate(100);
+        }
+        
     }
 
     /**
@@ -136,6 +142,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
+
         $user = User::findOrFail($id);
 
         $user->delete();

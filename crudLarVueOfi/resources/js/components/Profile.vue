@@ -264,17 +264,21 @@
 
         methods:{
             getProfilePhoto(){
-                return "img/profile/"+ this.form.photo;
+                let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/"+ this.form.photo;
+                return photo;
+               // return "img/profile/"+ this.form.photo;
             },
             updateInfo(){
                 this.$Progress.start();
                 this.form.put('api/profile/')
                 .then(()=>{
 
+                    Fire.$emit('AfterCreate');
                     swal.fire({
                       type: 'info',
                       title: 'Usuario actualizado'
                     })
+
                     this.$Progress.finish();
                 })
                 .catch(()=>{

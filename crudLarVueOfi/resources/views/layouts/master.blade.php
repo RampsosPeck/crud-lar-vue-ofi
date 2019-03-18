@@ -160,6 +160,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <p>{{ Auth::user()->type }}</p>
         </div>
       </div>
 
@@ -201,6 +202,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
+
+          @can('isAdmin')
           <li class="nav-item">
             <router-link to="/developer"  class="nav-link">
               <i class="nav-icon fas fa-cogs purple"></i>
@@ -209,6 +212,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li>
+          @endcan
+
           <li class="nav-item">
             <router-link to="profile"  class="nav-link">
               <i class="nav-icon fa fa-th orange"></i>
@@ -278,6 +283,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
+
+@auth
+<script>
+  window.user = @json(auth()->user())
+</script>
+@endauth
 
 <!-- jQuery -->
 <script src="/js/app.js"></script> 
