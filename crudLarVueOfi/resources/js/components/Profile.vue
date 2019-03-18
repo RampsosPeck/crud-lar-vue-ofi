@@ -17,7 +17,7 @@
                         <h5 class="widget-user-desc">Web Designer</h5>
                       </div>
                       <div class="widget-user-image">
-                        <img class="img-circle" src="/img/user.png" alt="User Avatar">
+                        <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
                       </div>
                       <div class="card-footer">
                         <div class="row">
@@ -181,28 +181,34 @@
                                 <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                                 <div class="col-sm-12">
-                                  <input type="text" v-model="form.name" class="form-control" id="inputName" placeholder="Name">
+                                  <input type="text" v-model="form.name" class="form-control" id="inputName" placeholder="Name" :class="{ 'is-invalid': form.errors.has('name')}">
+                                    <has-error :form="form" field="name"></has-error>
                                 </div>
                               </div>
                               <div class="form-group">
                                 <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                                 <div class="col-sm-12">
-                                  <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email">
+                                  <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email"
+                                  :class="{ 'is-invalid': form.errors.has('email')}">
+                                  <has-error :form="form" field="email"></has-error>
                                 </div>
                               </div>
                               <div class="form-group">
                                 <label for="inputExperience" class="col-sm-4 control-label">Experience</label>
 
                                 <div class="col-sm-12">
-                                  <textarea v-model="form.bio" class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                                  <textarea v-model="form.bio" class="form-control" id="inputExperience" placeholder="Experience" :class="{ 'is-invalid': form.errors.has('bio')}"></textarea>
+                                  <has-error :form="form" field="bio"></has-error>
                                 </div>
                               </div>
                               <div class="form-group">
                                 <label for="photo" class="col-sm-4 control-label">Profile Photo</label>
 
                                 <div class="col-sm-12">
-                                  <input type="file" @change="updateProfile" name="photo" class="form-input">
+                                  <input type="file" @change="updateProfile" name="photo" class="form-input" :class="{ 'is-invalid': form.errors.has('photo')}">
+                                  <has-error :form="form" field="photo"></has-error>
+
                                 </div>
                               </div>
 
@@ -211,7 +217,9 @@
 
                                 <div class="col-sm-12">
                                   <input type="password" v-model="form.password" class="form-control" id="password" 
-                                  placeholder="Password">
+                                  placeholder="Password" :class="{ 'is-invalid': form.errors.has('password')}">
+                                  <has-error :form="form" field="password"></has-error>
+
                                 </div>
                               </div>
                 
@@ -255,6 +263,9 @@
         },
 
         methods:{
+            getProfilePhoto(){
+                return "img/profile/"+ this.form.photo;
+            },
             updateInfo(){
                 this.$Progress.start();
                 this.form.put('api/profile/')
