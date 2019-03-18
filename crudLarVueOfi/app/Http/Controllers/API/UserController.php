@@ -25,7 +25,7 @@ class UserController extends Controller
         
         if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
         {
-            return User::orderBy('id','DESC')->paginate(100);
+            return User::orderBy('id','DESC')->paginate(2);
         }
         
     }
@@ -150,5 +150,20 @@ class UserController extends Controller
 
         return  ['message' => 'Usuario eliminado'];
 
+    }
+
+    public function search()
+    {
+        if($search = \Request::get('q')){
+            $users = User::where(function($query) use ($search){
+                $query->where('name','LIKE',"%$search%")
+                        ->orWhere('email','LIKE',"%$search%")
+                        ->orWhere('type','LIKE',"%$search%");
+            })->paginate(20);
+        }else{
+            $users =  User::orderBy('id','DESC')->paginate(2);
+        }
+
+        return $users;
     }
 }

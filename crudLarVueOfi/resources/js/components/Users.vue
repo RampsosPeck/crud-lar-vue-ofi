@@ -24,7 +24,7 @@
                         <th>Registrado</th>
                         <th>Modify</th>
                       </tr>
-                      <tr v-for="user in users" :key="user.id">
+                      <tr v-for="user in users.data" :key="user.id">
                         <td v-text="user.id"></td>
                         <td v-text="user.name"></td>
                         <td v-text="user.email"></td>
@@ -43,6 +43,9 @@
                     </tbody></table>
                   </div>
                   <!-- /.card-body -->
+                  <div class="card-footer">
+                        <pagination :data="users" @pagination-change-page="getResults"></pagination>
+                  </div>
                 </div>
                 <!-- /.card -->
               </div>
@@ -133,6 +136,12 @@
             }
         },
         methods:{
+            getResults(page = 1) {
+              axios.get('api/user?page=' + page)
+                .then(response => {
+                  this.users = response.data;
+                });
+            },
             updateUser(id){
                 this.$Progress.start();
 
@@ -199,7 +208,7 @@
             },
             loadUsers(){
                 if(this.$gate.isAdminOrAuthor()){
-                  axios.get("api/user").then(({data}) => (this.users = data.data));  
+                  axios.get("api/user").then(({data}) => (this.users = data));  
                 }
                 
             },
@@ -229,6 +238,17 @@
             }
         },
         created() {
+            Fire.$on('searching',()=> {
+              let query = this.$parent.search; 
+              axios.get('api/findUser?q=' + query)
+              .then((data)=>{
+                  this.users = data.data
+              
+              })
+              .catch(()=>{
+
+              })
+            })
             this.loadUsers();
             //aqui definimos el tiempo de respuesta para adquirir los datos 
             //setInterval(() => this.loadUsers(), 3000);
